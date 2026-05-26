@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A simple expense tracker to manage your daily expenses">
+    <title>Expense Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <h1>💰 Expense Tracker</h1>
+
+        <!-- Add Expense Form -->
+        <form id="expense-form">
+            <input
+                type="text"
+                id="expense-name"
+                placeholder="Expense name (e.g. Coffee)"
+                required
+            >
+            <input
+                type="number"
+                id="expense-amount"
+                placeholder="Amount (₹)"
+                min="0.01"
+                step="0.01"
+                required
+            >
+            <button type="submit" id="add-btn">+ Add Expense</button>
+        </form>
+
+        <!-- Total Display -->
+        <div class="total-bar">
+            <span>Total Spent</span>
+            <span id="total-amount">₹0.00</span>
+        </div>
+
+        <!-- Empty State -->
+        <p id="empty-msg" class="empty-message">No expenses yet. Add one above!</p>
+
+        <!-- Expense List -->
+        <ul id="expense-list"></ul>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
