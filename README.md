@@ -1,27 +1,49 @@
 # SDD Submission — Expense Tracker
 
-## What is Spec Driven Development?
+## Approach: Spec Driven Development (SDD)
 
-Spec Driven Development (SDD) means writing a **formal specification before writing any code**. The spec acts as a contract — it defines the data models, operations, validation rules, and response shapes upfront. Code is then written to fulfil the spec, not the other way around.
+Spec Driven Development means writing a **formal specification before writing any code**. The spec is the single source of truth — it defines the data models, operations, validation rules, and file structure. Code is a consequence of the spec, not the other way around.
 
-This project uses **OpenAPI 3.0** as the specification format.
+This submission uses **OpenAPI 3.0** as the specification format, **OpenSpec** to manage the SDD workflow, and **Antigravity IDE** as the AI coding assistant.
+
+---
 
 ## How This Was Built
 
-1. Asked: _"What does an expense look like?"_ — answered it in `openapi.yaml` before touching any HTML
-2. Defined the `Expense` schema: `id (uuid)`, `title (string)`, `amount (float)`, `category (enum)`, `date (ISO 8601)`
-3. Defined three operations: `listExpenses`, `createExpense`, `deleteExpense`
-4. Locked in validation rules: `title` min 1 char, `amount` min 0.01, `category` must be one of 5 values
-5. **Only then** opened `index.html` and wrote code that strictly follows the spec
+The development followed the OpenSpec workflow strictly:
 
-Every field name, data type, and validation rule in the JS is traceable back to `openapi.yaml`.
+**1. `/opsx-propose` — Define the feature in plain English**
+Described the Expense Tracker requirements to the AI agent. OpenSpec generated a formal functional spec saved in `openspec/specs/`.
+
+**2. `/opsx-explore` — Generate an implementation plan**
+OpenSpec analysed the spec and produced a structured plan (`openspec/plan.md`) and task breakdown (`openspec/tasks.md`) before any code was written.
+
+**3. `/opsx-apply` — Generate code from the spec**
+Only after the spec and plan were finalised did Antigravity generate `index.html`, `style.css`, and `script.js`. Every field name, validation rule, and file structure decision traces back to the spec.
+
+**4. Spec updated → Code updated**
+When the file structure was changed (single `index.html` → three separate files), the spec was updated first via `/opsx-propose`, then the code was regenerated. The spec always leads.
+
+---
 
 ## Files
 
-- `openapi.yaml` — the specification (written first)
-- `index.html` — the app implementation (written after, strictly follows spec)
-- `SPEC.md` — detailed SDD process documentation with comparison table
-- `README.md` — this file
+```
+sdd_submission/
+├── index.html       — HTML structure (generated from spec)
+├── style.css        — All styling (generated from spec)
+├── script.js        — All JavaScript logic (generated from spec)
+├── openapi.yaml     — OpenAPI 3.0 specification (written first)
+├── SPEC.md          — Full SDD process documentation
+├── README.md        — This file
+├── openspec/        — OpenSpec workflow artifacts
+│   ├── specs/       — Functional specifications
+│   ├── changes/     — Proposed changes log
+│   ├── plan.md      — Implementation plan
+│   ├── tasks.md     — Task breakdown
+│   └── config.yaml  — OpenSpec configuration
+└── .agent/          — Antigravity agent skills and workflows
+```
 
 ## How to Run
 
@@ -29,11 +51,36 @@ Open `index.html` in any browser. No build step or server needed.
 
 To view the OpenAPI spec visually, paste `openapi.yaml` into [editor.swagger.io](https://editor.swagger.io).
 
-## Observations (Honest Reflection)
+---
 
-- Slower to start — had to think through the data model before writing a single line of UI
-- But: field names are locked (`title` not `name`), types are explicit, validation rules are documented
-- A backend developer could read `openapi.yaml` and build a real API that this frontend connects to — no guessing needed
-- Scales to teams and production systems; the spec is the single source of truth
+## What the Spec Defines
 
-This is the **SDD** branch. See `vibe_coded_submission` for the contrast.
+The `openapi.yaml` written before any code locks in:
+
+| Element | Spec definition |
+|---|---|
+| Expense fields | `id` (uuid), `title` (string), `amount` (float), `category` (enum), `date` (ISO 8601) |
+| Validation | `title` min 1 char, `amount` min 0.01, `category` one of 5 values |
+| Operations | `listExpenses`, `createExpense`, `deleteExpense` |
+| Response shape | `{ expenses: Expense[], total: number }` |
+
+Every one of these is verifiable in the code — nothing was invented during implementation.
+
+---
+
+## Honest Reflection
+
+**What worked well:**
+- Field names, types, and validation rules were decided once, upfront
+- The spec acts as documentation — no need to read the code to understand the data model
+- File structure changes went through the spec first — no surprise diffs
+- A backend developer could build a real API from `openapi.yaml` with no guesswork
+
+**What was harder:**
+- Slower to start — required thinking through the full data model before writing line 1
+- Updating the spec before changing code requires discipline
+- Overkill for a five-minute fix — SDD pays off at scale
+
+---
+
+See the `vibe_coded_submission` branch for the same app built without a spec.
